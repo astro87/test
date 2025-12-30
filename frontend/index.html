@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VULNERA-MAP | AI-Driven SBOM Analysis</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <!-- BACKGROUND VIDEO -->
+    <video autoplay muted loop id="bg-video">
+        <source src="image/background.mp4" type="video/mp4">
+    </video>
+
+    <!-- SIDEBAR -->
+    <nav class="sidebar">
+        <div class="brand">
+            <img src="image/logo.png" class="brand-icon" alt="VULNERA-MAP Logo">
+            <span class="brand-text">VULNERA-MAP</span>
+        </div>
+
+        <div class="nav-menu">
+            <div class="nav-item active" data-view="dashboard">
+                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <rect x="3" y="3" width="7" height="7"></rect>
+                    <rect x="14" y="3" width="7" height="7"></rect>
+                    <rect x="14" y="14" width="7" height="7"></rect>
+                    <rect x="3" y="14" width="7" height="7"></rect>
+                </svg>
+                Overview
+            </div>
+            <div class="nav-item" data-view="upload">
+                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                    <polyline points="17 8 12 3 7 8"></polyline>
+                    <line x1="12" y1="3" x2="12" y2="15"></line>
+                </svg>
+                Upload SBOM
+            </div>
+            <div class="nav-item" data-view="results">
+                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <line x1="8" y1="6" x2="21" y2="6"></line>
+                    <line x1="8" y1="12" x2="21" y2="12"></line>
+                    <line x1="8" y1="18" x2="21" y2="18"></line>
+                    <line x1="3" y1="6" x2="3.01" y2="6"></line>
+                    <line x1="3" y1="12" x2="3.01" y2="12"></line>
+                    <line x1="3" y1="18" x2="3.01" y2="18"></line>
+                </svg>
+                Analysis
+            </div>
+            <div class="nav-item" data-view="performance">
+                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <polyline points="12 6 12 12 16 14"></polyline>
+                </svg>
+                Metrics
+            </div>
+        </div>
+    </nav>
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content">
+
+        <!-- HEADER -->
+        <header>
+            <h1 id="page-title">System Overview</h1>
+            <p class="subtitle" id="page-subtitle">Security Posture & Risk Assessment</p>
+        </header>
+
+        <!-- VIEW: DASHBOARD -->
+        <div id="view-dashboard" class="page-container active">
+            <div class="dashboard-grid">
+
+                <!-- Risk Score (Dominant) -->
+                <div class="panel risk-panel">
+                    <div class="risk-arc-container">
+                        <div class="risk-arc" id="risk-arc-visual"></div>
+                    </div>
+                    <div class="risk-value" id="risk-score" data-target="0">0</div>
+                    <div class="risk-label">System Risk Score</div>
+                </div>
+
+                <!-- Key Metrics -->
+                <div class="panel metric-panel">
+                    <span class="metric-label">Total Components</span>
+                    <span class="metric-value">-</span>
+                </div>
+                <div class="panel metric-panel">
+                    <span class="metric-label">Vulnerable</span>
+                    <span class="metric-value" style="color: var(--accent-high)">-</span>
+                </div>
+                <div class="panel metric-panel">
+                    <span class="metric-label">Critical</span>
+                    <span class="metric-value pulse" style="color: var(--accent-critical)">-</span>
+                </div>
+                <div class="panel metric-panel">
+                    <span class="metric-label">Analysis Time</span>
+                    <span class="metric-value">-</span>
+                </div>
+
+                <!-- History Panel (New) -->
+                <div class="panel" style="grid-column: span 8; display: flex; flex-direction: column;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+                        <h2>Recent Activity</h2>
+                        <span style="color:var(--text-tertiary); font-size:12px; cursor:pointer;">View Log</span>
+                    </div>
+                    <div class="history-list">
+                        <div class="history-item"
+                            onclick="openHistoryDetail('Backend Core V2', 'CI/CD Pipeline', 'CRITICAL')">
+                            <div class="history-dot"
+                                style="background:var(--accent-critical); box-shadow: 0 0 8px var(--accent-critical);">
+                            </div>
+                            <div class="history-info">
+                                <div class="history-title">Backend Core V2</div>
+                                <div class="history-meta">Today, 14:20 • CI/CD Pipeline</div>
+                            </div>
+                            <span class="badge badge-critical">Critical</span>
+                        </div>
+                        <div class="history-item"
+                            onclick="openHistoryDetail('Frontend Assets', 'Manual Upload', 'SAFE')">
+                            <div class="history-dot" style="background:var(--accent-safe)"></div>
+                            <div class="history-info">
+                                <div class="history-title">Frontend Assets</div>
+                                <div class="history-meta">Yesterday, 09:15 • Manual Upload</div>
+                            </div>
+                            <span class="badge badge-low">Safe</span>
+                        </div>
+                        <div class="history-item"
+                            onclick="openHistoryDetail('Legacy Payment Module', 'Scheduled Scan', 'HIGH')">
+                            <div class="history-dot" style="background:var(--accent-high)"></div>
+                            <div class="history-info">
+                                <div class="history-title">Legacy Payment Module</div>
+                                <div class="history-meta">Dec 28 • Scheduled Scan</div>
+                            </div>
+                            <span class="badge badge-high">High</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Wide Panel (Risk Distribution) -->
+                <div class="panel" style="grid-column: span 12; min-height: 200px;">
+                    <h2>Risk Distribution</h2>
+                    <div class="dist-bar-container" id="dist-chart">
+                        <div class="dist-segment" data-target="0%" style="width:0%; background:var(--accent-critical)">
+                        </div>
+                        <div class="dist-segment" data-target="0%" style="width:0%; background:var(--accent-high)">
+                        </div>
+                        <div class="dist-segment" data-target="0%" style="width:0%; background:var(--accent-medium)">
+                        </div>
+                        <div class="dist-segment" data-target="0%" style="width:0%; background:var(--accent-safe)">
+                        </div>
+                    </div>
+                    <div
+                        style="display:flex; justify-content:space-between; margin-top:8px; color:var(--text-tertiary); font-size:12px;">
+                        <span>CRITICAL</span>
+                        <span>HIGH</span>
+                        <span>MEDIUM</span>
+                        <span>SAFE</span>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- VIEW: UPLOAD -->
+        <div id="view-upload" class="page-container">
+            <div class="panel" style="max-width: 600px; margin: 0 auto;">
+                <div class="upload-zone" id="upload-dropzone">
+                    <svg width="40" height="40" fill="none" stroke="var(--text-tertiary)" stroke-width="1"
+                        viewBox="0 0 24 24">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                        <polyline points="17 8 12 3 7 8"></polyline>
+                        <line x1="12" y1="3" x2="12" y2="15"></line>
+                    </svg>
+                    <div class="upload-text">Drag SBOM file here</div>
+                    <div class="upload-sub">Target formats: JSON, CycloneDX, SPDX</div>
+                </div>
+                <div id="upload-progress-container" style="display:none; margin-top: 24px;">
+                    <div class="bar-track">
+                        <div class="bar-fill" id="upload-progress-bar" style="background: var(--accent-safe)"></div>
+                    </div>
+                    <div style="text-align:center; color: var(--text-secondary); font-size: 12px; margin-top: 8px;"
+                        id="upload-status-text">Uploading...</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- VIEW: RESULTS -->
+        <div id="view-results" class="page-container">
+            <div class="panel">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>COMPONENT</th>
+                            <th>VERSION</th>
+                            <th>RISK SCORE</th>
+                            <th>SEVERITY</th>
+                            <th>FINDINGS</th>
+                        </tr>
+                    </thead>
+                    <tbody id="results-table-body">
+                        <!-- Populated by JS -->
+                        <tr>
+                            <td colspan="5" style="text-align:center; padding: 40px; color: var(--text-tertiary);">
+                                Upload an SBOM to see analysis results</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- VIEW: PERFORMANCE -->
+        <div id="view-performance" class="page-container">
+            <div class="dashboard-grid">
+                <div class="panel" style="grid-column: span 8;">
+                    <h2>Pipeline Execution Metrics</h2>
+                    <div style="margin-top: 30px;">
+
+                        <div class="bar-chart-row">
+                            <div class="bar-label">Parsing</div>
+                            <div class="bar-track">
+                                <div class="bar-fill" data-width="15%" style="background: var(--text-tertiary)"></div>
+                            </div>
+                            <div class="bar-label" style="text-align:right">45ms</div>
+                        </div>
+
+                        <div class="bar-chart-row">
+                            <div class="bar-label">Graph Const.</div>
+                            <div class="bar-track">
+                                <div class="bar-fill" data-width="35%" style="background: var(--text-secondary)"></div>
+                            </div>
+                            <div class="bar-label" style="text-align:right">120ms</div>
+                        </div>
+
+                        <div class="bar-chart-row">
+                            <div class="bar-label">Vuln. Match</div>
+                            <div class="bar-track">
+                                <div class="bar-fill" data-width="85%" style="background: var(--accent-high)"></div>
+                            </div>
+                            <div class="bar-label" style="text-align:right">340ms</div>
+                        </div>
+
+                        <div class="bar-chart-row">
+                            <div class="bar-label">ML Inference</div>
+                            <div class="bar-track">
+                                <div class="bar-fill" data-width="60%" style="background: var(--accent-medium)"></div>
+                            </div>
+                            <div class="bar-label" style="text-align:right">210ms</div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- SLIDE-OUT PANEL (COMPONENT DETAIL) -->
+    <div class="slide-panel" id="detail-panel">
+        <button class="close-btn" onclick="closeDetail()">&times;</button>
+        <div id="detail-content">
+            <!-- Dynamic Content -->
+            <span class="badge badge-critical" id="detail-badge"
+                style="margin-bottom: 12px; display:inline-block">CRITICAL</span>
+            <h2 id="detail-title" style="font-size: 24px;">Apache Log4j</h2>
+            <div style="color: var(--text-tertiary); margin-bottom: 30px;">Version 2.14.1</div>
+
+            <div style="margin-bottom: 30px;">
+                <h3
+                    style="font-size: 14px; text-transform:uppercase; letter-spacing:1px; color:var(--text-tertiary); margin-bottom:12px;">
+                    Analysis Note</h3>
+                <div id="detail-nlp-text" style="color: var(--text-secondary); line-height: 1.6;">
+                    <!-- Content injected via JS for animation -->
+                </div>
+            </div>
+
+            <div style="border-top: 1px solid var(--border-subtle); padding-top: 20px;">
+                <div style="display:flex; justify-content:space-between; margin-bottom: 10px;">
+                    <span style="color:var(--text-tertiary)">Dependency Depth</span>
+                    <span>Direct</span>
+                </div>
+                <div style="display:flex; justify-content:space-between;">
+                    <span style="color:var(--text-tertiary)">Exploitability</span>
+                    <span style="color:var(--accent-critical)">High</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL -->
+    <div class="modal-overlay" id="info-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title" id="modal-title">Metric Info</div>
+                <button class="close-btn" style="position:static; font-size:20px;" onclick="closeModal()">×</button>
+            </div>
+            <div class="modal-body" id="modal-body">
+                <!-- Content here -->
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
